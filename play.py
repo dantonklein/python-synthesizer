@@ -7,10 +7,10 @@ import utils.waveforms as waveforms
 # 16 bit audio, generate a 440Hz (A4) sine wave for 1 second
 sampling_rate = 44100 #44.1kHz
 frequency = note_to_freq("A4")
-song = waveforms.triangle(frequency, 1, sampling_rate)
+note = waveforms.sine(frequency, 4, sampling_rate)
+note_adsr = waveforms.apply_adsr(note, 0.5, 0.5, 0.3, 1)
 
-
-data = waveforms.wave_to_int16(song).tobytes()
+data = waveforms.wave_to_int16(note_adsr).tobytes()
 
 output_dir = Path("output")
 output_dir.mkdir(exist_ok=True)
