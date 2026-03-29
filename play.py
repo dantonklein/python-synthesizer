@@ -1,16 +1,15 @@
 import numpy as np
 from pathlib import Path
 import wave
-from utils.notes import note_to_freq
+import utils.music as music
 import utils.waveforms as waveforms
 
 # 16 bit audio, generate a 440Hz (A4) sine wave for 1 second
 sampling_rate = 44100 #44.1kHz
-frequency = note_to_freq("A4")
-note = waveforms.sine(frequency, 4, sampling_rate)
-note_adsr = waveforms.apply_adsr(note, 0.5, 0.5, 0.3, 1)
+test = music.Note(["E4", "G#4", "B4"], "whole")
 
-data = waveforms.wave_to_int16(note_adsr).tobytes()
+
+data = waveforms.wave_to_int16(test.create_array(120, "sine", sampling_rate)).tobytes()
 
 output_dir = Path("output")
 output_dir.mkdir(exist_ok=True)
