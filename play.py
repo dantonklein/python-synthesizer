@@ -42,7 +42,7 @@ notes.append(music.Note(["D4"], "quarter", "6:3"))
 
 notes.append(music.Note(["C4"], "whole", "7:0"))
 
-test = music.Track("test", "sine", "0:0", 8, 1, notes)
+test = music.Track("test", waveforms.Sine(), "0:0", 8, 1, notes)
 
 data = waveforms.wave_to_int16(test.create_array(bpm, sampling_rate, "4/4")).tobytes()
 

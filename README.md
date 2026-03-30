@@ -6,3 +6,4 @@ Python based music production software with the purpose of getting me more comfo
 - Sampled waveforms
 - GUI
 - BPM and time signature switching
+- Support multiple exporting format
