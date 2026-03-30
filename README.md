@@ -4,4 +4,5 @@ Python based music production software with the purpose of getting me more comfo
 
 ## Features planned:
 - Sampled waveforms
-- Eventual GUI
+- GUI
+- BPM and time signature switching
