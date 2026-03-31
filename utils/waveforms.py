@@ -38,8 +38,8 @@ WAVEFORMS = {
 def normalize(wave):
     return wave / np.max(np.abs(wave))
 
-def wave_to_int16(wave):
-    return (wave * 32767).astype(np.int16)
+def wave_to_int16_bytes(wave):
+    return (wave * 32767).astype(np.int16).tobytes()
 
 def apply_adsr(wave, attack, decay, sustain_level, release, sample_rate=44100):
     #calculate the amount of samples for each part

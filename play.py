@@ -42,9 +42,23 @@ notes.append(music.Note(["D4"], "quarter", "6:3"))
 
 notes.append(music.Note(["C4"], "whole", "7:0"))
 
-test = music.Track("test", waveforms.Sine(), "0:0", 8, 1, notes)
+tracks = []
+tracks.append(music.Track("mary", waveforms.Sine(), 0, 8, 1, notes))
 
-data = waveforms.wave_to_int16(test.create_array(bpm, sampling_rate, "4/4")).tobytes()
+notes = []
+notes.append(music.Note(["C2"], "whole", "0:0"))
+notes.append(music.Note(["C2"], "whole", "1:0"))
+notes.append(music.Note(["G2"], "whole", "2:0"))
+notes.append(music.Note(["G2"], "whole", "3:0"))
+notes.append(music.Note(["C2"], "whole", "4:0"))
+notes.append(music.Note(["C2"], "whole", "5:0"))
+notes.append(music.Note(["G2"], "whole", "6:0"))
+notes.append(music.Note(["C2"], "whole", "7:0"))
+tracks.append(music.Track("bass", waveforms.Sawtooth(), 0, 8, 0.1, notes))
+
+test = music.Song("test", bpm, 8, tracks, sampling_rate, "4/4")
+
+data = waveforms.wave_to_int16_bytes(test.create_array())
 
 output_dir = Path("output")
 output_dir.mkdir(exist_ok=True)

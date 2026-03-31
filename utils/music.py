@@ -46,9 +46,6 @@ class Note:
             note_wave =  waveform.generate(note_to_freq(self.note_names[0]), duration_seconds, sample_rate)
         return waveforms.apply_adsr(note_wave, self.attack, self.decay, self.sustain, self.release, sample_rate)
 
-    def get_position(self):
-        return self.position
-
     def __repr__(self):
         if isinstance(self.note_name, list):
             notes = ", ".join(self.note_name)
@@ -70,20 +67,20 @@ class Track:
         length_of_bar = bars_to_samples_length(1, bpm, time_signature, sample_rate)
         beats_per_bar = int(time_signature.split("/")[0])
         for note_n in self.notes:
-            position_n = note_n.get_position()
+            position_n = note_n.position
             bars_n, beats_n = position_n.split(":")
             bars_n, beats_n = float(bars_n), float(beats_n)
             position_samples = int(length_of_bar * (bars_n + beats_n / beats_per_bar))
             note_waveform = note_n.create_array(bpm, self.waveform, sample_rate)
             track_array[position_samples:position_samples+len(note_waveform)] += note_waveform
-        return track_array * self.volume
+        return waveforms.normalize(track_array) * self.volume
     
     def __repr__(self):
         return f"Track({self.name}, {self.waveform}, {len(self.notes)} notes)"
 
 
 class Song:
-    def __init__ (self, name, bpm, length, tracks, sample_rate = "44100", time_signature = "4/4"):
+    def __init__ (self, name, bpm, length, tracks, sample_rate = 44100, time_signature = "4/4"):
         self.name = name
         self.bpm = bpm
         self.time_signature = time_signature # default of 4/4
@@ -91,3 +88,16 @@ class Song:
         self.sample_rate = sample_rate
         self.tracks = tracks # array of tracks
 
+    def create_array(self):
+        song_length = bars_to_samples_length(self.length, self.bpm, self.time_signature, self.sample_rate)
+        song_array = np.zeros(song_length)
+        length_of_bar = bars_to_samples_length(1, self.bpm, self.time_signature, self.sample_rate)
+        for track_n in self.tracks:
+            position_n = track_n.position
+            position_samples = int(length_of_bar * position_n)
+            track_waveform_n = track_n.create_array(self.bpm, self.sample_rate, self.time_signature)
+            song_array[position_samples:position_samples+len(track_waveform_n)] += track_waveform_n
+        return waveforms.normalize(song_array)
+    
+    def __repr__(self):
+        return f"Song({self.name}, {self.bpm}, {self.time_signature}, {self.tracks})"
